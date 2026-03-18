@@ -1,0 +1,31 @@
+type: dagster_hightouch.HightouchSyncComponent
+
+attributes:
+  sync_id: "84201"
+  asset:
+    key: hightouch/salesforce_contacts_sync
+    group_name: reverse_etl
+    kinds:
+      - hightouch
+      - salesforce
+    description: >
+      Hightouch reverse ETL sync that pushes the mart_customers model
+      from Snowflake to Salesforce Contacts.
+    deps:
+      - mart_customers
+---
+type: dagster_hightouch.HightouchSyncComponent
+
+attributes:
+  sync_id: "84202"
+  asset:
+    key: hightouch/hubspot_companies_sync
+    group_name: reverse_etl
+    kinds:
+      - hightouch
+      - hubspot
+    description: >
+      Hightouch reverse ETL sync that pushes the mart_customers model
+      from Snowflake to HubSpot Companies.
+    deps:
+      - mart_customers

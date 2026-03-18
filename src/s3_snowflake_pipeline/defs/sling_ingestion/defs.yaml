@@ -1,0 +1,19 @@
+type: dagster_sling.SlingReplicationCollectionComponent
+
+attributes:
+  sling:
+    connections:
+      - name: S3_SOURCE
+        type: s3
+        connection_string: "s3://{{ env.S3_BUCKET_URL }}"
+      - name: SNOWFLAKE_TARGET
+        type: snowflake
+        connection_string: "snowflake://{{ env.SNOWFLAKE_USER }}:{{ env.SNOWFLAKE_PASSWORD }}@{{ env.SNOWFLAKE_ACCOUNT }}/{{ env.SNOWFLAKE_DATABASE }}/{{ env.SNOWFLAKE_SCHEMA }}?warehouse={{ env.SNOWFLAKE_WAREHOUSE }}&role={{ env.SNOWFLAKE_ROLE }}"
+  replications:
+    - path: replication.yaml
+      translation:
+        group_name: ingestion
+        kinds:
+          - s3
+          - snowflake
+          - sling

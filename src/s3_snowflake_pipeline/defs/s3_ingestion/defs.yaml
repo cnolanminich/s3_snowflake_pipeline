@@ -1,0 +1,24 @@
+type: dagster_dlt.DltLoadCollectionComponent
+
+attributes:
+  loads:
+    # To add a new S3-to-Snowflake pipeline:
+    #   1. Add a new source variable in loads.py:  my_source = s3_source("my_prefix/")
+    #   2. Add a new entry here referencing it
+    - source: .loads.customers_source
+      pipeline: .loads.s3_to_snowflake_pipeline
+      translation:
+        group_name: ingestion
+        kinds:
+          - s3
+          - snowflake
+          - dlt
+
+    - source: .loads.transactions_source
+      pipeline: .loads.s3_to_snowflake_pipeline
+      translation:
+        group_name: ingestion
+        kinds:
+          - s3
+          - snowflake
+          - dlt

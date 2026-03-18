@@ -1,0 +1,13 @@
+source: S3_SOURCE
+target: SNOWFLAKE_TARGET
+
+defaults:
+  mode: full-refresh
+  object: "raw_data.{stream_file_name}"
+
+streams:
+  "s3://your-bucket/events/*.csv":
+    object: "raw_data.events"
+
+  "s3://your-bucket/products/*.csv":
+    object: "raw_data.products"
