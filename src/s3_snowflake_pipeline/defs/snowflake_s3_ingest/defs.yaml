@@ -1,9 +1,6 @@
 type: dagster.TemplatedSqlComponent
 
 attributes:
-  # References the SnowflakeConnectionComponent — this is why it exists.
-  # The TemplatedSqlComponent needs a SQLClient to execute queries, and
-  # SnowflakeConnectionComponent implements that interface.
   connection: "{{ context.load_component('snowflake_connection') }}"
 
   sql_template:
@@ -28,4 +25,33 @@ attributes:
         - sql
       description: >
         Leads data ingested from S3 into Snowflake via COPY INTO.
+        Uses a Snowflake external stage pointed at the S3 bucket.
+---
+type: dagster.TemplatedSqlComponent
+
+attributes:
+  connection: "{{ context.load_component('snowflake_connection') }}"
+
+  sql_template:
+    path: ingest.sql
+
+  sql_template_vars:
+    database: "{{ env.SNOWFLAKE_DATABASE }}"
+    schema: "{{ env.SNOWFLAKE_SCHEMA }}"
+    table_name: accounts
+    stage_name: s3_accounts_stage
+    s3_bucket: "{{ env('S3_BUCKET_URL', 's3://your-bucket') }}"
+    s3_prefix: accounts/
+    file_format: CSV
+    file_pattern: ".*[.]csv"
+
+  assets:
+    - key: raw_data/accounts
+      group_name: ingestion
+      kinds:
+        - s3
+        - snowflake
+        - sql
+      description: >
+        Accounts data ingested from S3 into Snowflake via COPY INTO.
         Uses a Snowflake external stage pointed at the S3 bucket.
